@@ -1,0 +1,92 @@
+{"projectName":"IoT Platform for Elderly Health Monitoring",
+  "lastUpdate":"2024-08-15 17:58",
+  "users": [
+    {
+
+      "userID": 1,
+      "name":"Hesam",
+      "surname":"Alemifar",
+      "username": "Hesam20",
+      "password": "Hesam@20",
+      "latitude" : 45.07458503351405,
+      "longitude" : 7.701482095436164,
+      "csvFile": "Hesam20.csv",
+      "thingSpeakChannelID": "2505758",
+      "thingSpeakWriteAPIKey": "L2ENIY2E42E4AT5J"
+    },
+    {
+      "userID": 2,
+      "name":"Homa",
+      "surname":"Jamalof",
+      "username": "Homa14",
+      "password": "Homa@14",
+      "latitude" : 45.030462971697766,
+      "longitude" : 7.656273992666321,
+      "csvFile": "Homa14.csv",
+      "thingSpeakChannelID": "2505758",
+      "thingSpeakWriteAPIKey": "L2ENIY2E42E4AT5J"
+    },
+    {
+      "userID": 3,
+      "name":"Arman",
+      "surname":"Moradi",
+      "username": "Ar33",
+      "password": "Ar@33",
+      "latitude" : 45.05428464205943,
+      "longitude" : 7.686811353651298,
+      "csvFile": "Ar33.csv",
+      "thingSpeakChannelID": "2505758",
+      "thingSpeakWriteAPIKey": "L2ENIY2E42E4AT5J"
+    }
+  ],
+"devicesList":[
+    {
+      "deviceID":1,
+      "deviceName":"Quectel L86",
+      "measureType":["GPS"],
+      "unit":"Latitude and Longitude coordinates",
+      "normalRange": 500,
+      "availableServices":["MQTT"],
+      "servicesDetails":[
+          {
+            "serviceType":"MQTT",
+            "serviceIP":"mqtt.eclipse.org",
+            "topic":["SmartHealth/{user_id}/danger/gps"]
+          }
+      ],
+      "lastUpdate":"2023-12-12"
+    },
+    {
+      "deviceID":2,
+      "deviceName":"Maxim Integrated MAXM86161",
+      "measureType":["Heart Rate"],
+      "unit":"bpm",
+      "normalRange":[60, 100],
+      "availableServices":["MQTT"],
+      "servicesDetails":[
+          {
+            "serviceType":"MQTT",
+            "serviceIP":"mqtt.eclipse.org",
+            "topic":["SmartHealth/{user_id}/heart_rate", "SmartHealth/{user_id}/danger/heart_rate"]
+          }
+      ],
+      "lastUpdate":"2023-12-12"
+    },
+    {
+      "deviceID":3,
+      "deviceName":"Maxim Integrated MAXM86161",
+      "measureType":["Blood Oxygen"],
+      "unit":"%SpO2",
+      "normalRange":[90, 100],
+      "availableServices":["MQTT"],
+      "servicesDetails":[
+          {
+            "serviceType":"MQTT",
+            "serviceIP":"mqtt.eclipse.org",
+            "topic":["SmartHealth/{user_id}/blood_oxygen", "SmartHealth/{user_id}/danger/blood_oxygen"]
+          }
+      ],
+      "lastUpdate":"2023-12-12"
+    }
+  ]
+}

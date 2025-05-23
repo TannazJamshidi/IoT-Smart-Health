@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Management</title>
+    <link rel="stylesheet" href="static/style.css">
+    <script>
+        function showForm(formId) {
+            document.querySelectorAll('.form-container').forEach(form => form.style.display = 'none');
+            document.getElementById(formId).style.display = 'block';
+        }
+
+        async function createUser(event) {
+            event.preventDefault();
+            const form = event.target;
+            const data = {
+                name: form.name.value,
+                surname: form.surname.value,
+                username: form.username.value,
+                password: form.password.value,
+                latitude: parseFloat(form.latitude.value),
+                longitude: parseFloat(form.longitude.value),
+                thingSpeakChannelID: form.thingSpeakChannelID.value,
+                thingSpeakWriteAPIKey: form.thingSpeakWriteAPIKey.value
+            };
+
+            const response = await fetch('/user/add_user', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+            const result = await response.json();
+            alert(result.message || result.error);
+            form.reset();
+        }
+
+        async function updateUser(event) {
+            event.preventDefault();
+            const form = event.target;
+            const data = {
+                username: form.username.value,
+                password: form.password.value,
+                new_username: form.new_username.value || undefined,
+                new_password: form.new_password.value || undefined,
+                name: form.name.value || undefined,
+                surname: form.surname.value || undefined,
+                latitude: form.latitude.value ? parseFloat(form.latitude.value) : undefined,
+                longitude: form.longitude.value ? parseFloat(form.longitude.value) : undefined,
+                thingSpeakChannelID: form.thingSpeakChannelID.value || undefined,
+                thingSpeakWriteAPIKey: form.thingSpeakWriteAPIKey.value || undefined
+            };
+
+            const response = await fetch('/user/update_user', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+            const result = await response.json();
+            alert(result.message || result.error);
+            form.reset();
+        }
+
+        async function deleteUser(event) {
+            event.preventDefault();
+            const form = event.target;
+
+            const confirmDelete = confirm("Are you sure you want to delete this user?");
+            if (confirmDelete) {
+                const confirmIrreversible = confirm("This action is irreversible. Are you absolutely sure?");
+                if (confirmIrreversible) {
+                    const data = { username: form.username.value, password: form.password.value };
+                    const response = await fetch('/user/delete_user', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(data)
+                    });
+                    const result = await response.json();
+                    alert(result.message || result.error);
+                    form.reset();
+                } else {
+                    alert("User deletion cancelled.");
+                }
+            } else {
+                alert("User deletion cancelled.");
+            }
+        }
+
+        async function readUser(event) {
+            event.preventDefault();
+            const form = event.target;
+            const data = { username: form.username.value };
+
+            const response = await fetch('/user/read_user', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+            const result = await response.json();
+            if (result.error) {
+                alert(result.error);
+            } else {
+                alert(`User Info:\n\nName: ${result.name}\nSurname: ${result.surname}\nUsername: ${result.username}\nLatitude: ${result.latitude}\nLongitude: ${result.longitude}\nThingSpeak Channel ID: ${result.thingSpeakChannelID}\nThingSpeak Write API Key: ${result.thingSpeakWriteAPIKey}`);
+            }
+            form.reset();
+        }
+    </script>
+</head>
+<body>
+    <h1>User Management</h1>
+    <button onclick="showForm('createUserForm')">Create User</button>
+    <button onclick="showForm('updateUserForm')">Update User</button>
+    <button onclick="showForm('deleteUserForm')">Delete User</button>
+    <button onclick="showForm('readUserForm')">Read User</button>
+
+    <div id="createUserForm" class="form-container" style="display:none;">
+        <h2>Create User</h2>
+        <form onsubmit="createUser(event)">
+            <label>Name: <input type="text" name="name" required></label><br>
+            <label>Surname: <input type="text" name="surname" required></label><br>
+            <label>Username: <input type="text" name="username" required></label><br>
+            <label>Password: <input type="password" name="password" required></label><br>
+            <label>Latitude: <input type="text" name="latitude" required></label><br>
+            <label>Longitude: <input type="text" name="longitude" required></label><br>
+            <label>ThingSpeak Channel ID: <input type="text" name="thingSpeakChannelID" required></label><br>
+            <label>ThingSpeak Write API Key: <input type="text" name="thingSpeakWriteAPIKey" required></label><br>
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+
+    <div id="updateUserForm" class="form-container" style="display:none;">
+        <h2>Update User</h2>
+        <form onsubmit="updateUser(event)">
+            <label>Username: <input type="text" name="username" required></label><br>
+            <label>Password: <input type="password" name="password" required></label><br>
+            <label>New Username: <input type="text" name="new_username"></label><br>
+            <label>New Password: <input type="password" name="new_password"></label><br>
+            <label>New Name: <input type="text" name="name"></label><br>
+            <label>New Surname: <input type="text" name="surname"></label><br>
+            <label>New Latitude: <input type="text" name="latitude"></label><br>
+            <label>New Longitude: <input type="text" name="longitude"></label><br>
+            <label>New ThingSpeak Channel ID: <input type="text" name="thingSpeakChannelID"></label><br>
+            <label>New ThingSpeak Write API Key: <input type="text" name="thingSpeakWriteAPIKey"></label><br>
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+
+    <div id="deleteUserForm" class="form-container" style="display:none;">
+        <h2>Delete User</h2>
+        <form onsubmit="deleteUser(event)">
+            <label>Username: <input type="text" name="username" required></label><br>
+            <label>Password: <input type="password" name="password" required></label><br>
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+
+    <div id="readUserForm" class="form-container" style="display:none;">
+        <h2>Read User</h2>
+        <form onsubmit="readUser(event)">
+            <label>Username: <input type="text" name="username" required></label><br>
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+</body>
+</html>
